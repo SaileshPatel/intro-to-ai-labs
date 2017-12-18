@@ -1,0 +1,110 @@
+;; Dribble of #<IO TERMINAL-STREAM> started on 2015-03-24 03:50:52.
+#<OUTPUT BUFFERED FILE-STREAM CHARACTER #P"expert-system-output.txt">
+[3]> (run)
+
+What is the name of your animal you want identified?
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+stripey
+
+The name you have entered is STRIPEY. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+We know the following facts about STRIPEY: ((GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+Lets try and prove the animal's identification using backward reasoning.
+What animal do you think STRIPEY is? It must be one of the following:
+(CHEETAH TIGER GIRAFFE ZEBRA OSTRICH PENGUIN ALBATROSS)
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebra
+
+The name you have entered is ZEBRA. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+OK, you think it is a ZEBRA. Ready to find out whether you are right?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+I can't prove the animal is a UNGULATE using the rule
+(UNGULATE ((MAMMAL Y) (CHEW-CUD Y)))
+because it does not have CHEW-CUD with truth status of Y.
+
+
+I can't prove the animal is a UNGULATE using the rule
+(UNGULATE ((MAMMAL Y) (HOOFS Y)))
+because it does not have HOOFS with truth status of Y.
+
+
+I can't prove the animal is a ZEBRA using the rule
+(ZEBRA ((UNGULATE Y) (BLACK-STRIPES Y)))
+because it does not have UNGULATE with truth status of Y.
+
+
+Sorry, we are not able to find out what STRIPEY is for the reasons stated above.
+
+Would you like us to try and identify your animal using forward reasoning?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+        FORWARD CHAINING
+        ----------------
+
+At present, before forward reasoning starts, we know the animal has the following properties:
+((GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+We will now use forward reasoning with our rule base to try and identify it.
+READY TO ROLL?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+OK, LET'S GO
+.......
+THINKING
+........
+THINKING
+........
+
+------- STILL PROVING A LITTLE TRICKY THIS ONE -------
+
+We are not able to identify the animal with the current *facts.
+You will need to provide us with some additional information.
+
+The current known facts are: ((MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+Now enter a new fact.
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+hoofs
+
+The name you have entered is HOOFS. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+Is HOOFS known to be present or absent?
+Type `y' followed by <RETURN> for YES (known to be present) or 'n' and <RETURN> for NO (known to be absent).
+y
+
+ -------------- GOT IT! ----------------
+
+Your animal is a ZEBRA
+
+The new facts after forward-chaining are: 
+((ZEBRA Y) (UNGULATE Y) (HOOFS Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y)
+ (BLACK-STRIPES Y)).
+
+and STRIPEY is a ZEBRA because it has the following conditions: (BLACK-STRIPES UNGULATE).
+NIL
+[4]> (dribble)
+;; Dribble of #<IO TERMINAL-STREAM> finished on 2015-03-24 03:52:03.

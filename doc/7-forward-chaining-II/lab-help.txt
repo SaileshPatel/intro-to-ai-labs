@@ -1,0 +1,186 @@
+This document gives the design of a forward-chaining system that
+should make it easier for you to finish the first lab exercise. The
+next one will complete the system, which you can do by building on the
+ideas in this document or by continuing your own approach.
+
+The document shows the philosophy used for designing and evolving a
+lisp program:
+
+1) Use a short-cut function definition to make it quicker to reload
+the file into the interpretor every time you make a change in the lisp
+code.
+
+2) It is usually not a good idea to use global variables, which are
+stored in the lisp interpretor and accessible by any
+function. However, for intelligent knowledge base systems, it is
+better to access the often very large knowledge structures externally
+rather than passing them in as arguments to functions, which could
+cause accompanying memory problems. If you do use global variables,
+distinguish them clearly in your code. An asterisk in front of the
+name is one way of doing this.
+
+3) Have a convention for how you are going to pass globals to your
+functions. Normally, any variables external to a function that are
+used by the function should be passed as a parameter because it shows
+exactly what data the function is operating on. But for global
+variables, it sometimes bloats the parameter list if all are passed in
+every time. So I am using a convention that says the *facts list is
+NEVER loaded in as a parameter and will ALWAYS be changed by the
+function as a side effect if the function output is to add or delete
+something from the *facts. Every other variable is explicitly passed
+into the functions as a parameter and never changed by the function as
+a side effect (which is the normal and best convention).
+
+4) Always explain what your variables and functions are doing with
+comments. In particular make sure you state exactly what format is
+expected for each parameter and exactly what the function will
+return. Often, the return value is chosen for how useful it is to pass
+on to other functions because the key coding principle for lisp is to
+change variables by explicit assignment using setf, not by side
+effects of a function. So you need the most useful returned value.
+
+5) Set up some test variables that will not be part of the eventual
+system but help with testing it as you code it. These are not globals
+of the final system and will be deleted.
+
+6) You should have got a design for your program that has a number of
+small steps with operators you define to make coding these steps
+easy. With the forward-chaining expert system, you know you are going
+to need the following operators and steps:
+
+- get the conditions of a rule
+
+- get the conclusion of a rule
+
+- find out whether a single condition is already in the fact base (known)
+
+- find out whether the known condition is actually true (has the 
+  correct vaue for the rule)
+
+- find out whether the conclusion of a rule is known (no point firing
+  it if it is)
+
+- find out whether all conditions of a rule are known (rule
+  is triggered)
+
+- get all the rules that are currently triggered
+
+- fire all the triggered rules, which means they add their conclusions
+  to the known facts if the conclusions are not already there.
+
+I have given below the globals and the test variables I used and then
+shown how the functions I need are called and what they return when
+the program is run. So you can see exactly what parameters the
+functions use and what comes back. This takes you up to the end of
+the first class on building this system and should make it easier for
+you to complete the system in the second class.
+
+(defun expert nil (load "lisp-expert.lisp"))
+
+;; FORWARD CHAINING VERSION OF THE EXPERT SYSTEM
+
+;; rule database: assoc list of conclusion and list of conditions
+;; conditions are given a value, partly to allow assoc lists and easy
+;; searching
+;;
+(setf *rules '
+      ((mammal ((hair y)(give-milk y)))
+       (bird ((feathers y)(lay-eggs y)))
+       (carnivore ((mammal y) (eats-meat y)(pointed-teeth y) (forward-eyes y)))
+       (carnivore ((mammal y)(eats-meat y)(claws y)))
+       (ungulate ((mammal y)(hoofs y)))
+       (ungulate ((mammal y) (chew-cud y)))
+       (cheetah ((mammal y) (carnivore y) (tawney y) (dark-spots y)))
+       (tiger   ((mammal y) (carnivore y) (tawney y) (black-stripes y)))
+       (giraffe ((ungulate y) (long-neck y) (long-legs y) (dark-spots y)))
+       (zebra ((ungulate y)(black-stripes y)))
+       (ostrich ((bird y) (fly n) (long-neck y) (long-legs y)
+                 (black-and-white-colour y)))
+       (penguin ((bird y) (fly n) (swim y) (black-and-white-colour y)))
+       (albatross ((bird y) (fly-well y)))))
+
+;; global variable holding the facts as they emerge about an animal to
+;; identify.
+;;
+(setf *facts ())
+
+
+;; Some test variables so that we can pass them straight into our
+;; emerging functions for testing
+;;
+(setf test-rule1 '(bird ((feathers y)(lay-eggs y)))
+      test-rule2 '(bird ((fly y)(swim y)))
+      test-mammal '(mammal ((hair y)(give-milk y)))
+      test-zebra '(zebra ((ungulate y)(black-stripes y))))
+
+(setf test-condition '(swim y))
+
+;; Global variable to hold the accumulating facts about an
+;; animal. Also used for testing forward chaining with facts already
+;; known (i.e. not having to ask the user about the animal).
+;;
+;; Note the use of comments to make it easy to switch between
+;; different test setups.
+(setf *facts '((feathers y) (lay-eggs y) (fly n)(ungulate y)(black-stripes y)))
+;;(setf *facts '((feathers y) (lay-eggs y) (fly n)(black-stripes y)))
+;;(setf *facts '((feathers y) (lay-eggs y) (fly n)(black-stripes y)(bird y)))
+
+;; Rules which have goal conclusions. Needed to tell the system when a
+;; solution (goal) has been found so that it can stop
+;;
+(setf *goals '(cheetah tiger giraffe zebra ostrich penguin albatross))
+
+   ------------------ OUTPUT TEST FILE -------------------------
+
+The following output is generated by using the "dribble" function in
+lisp. If you type
+
+(dribble "filename")
+
+everything that you see in the lisp interpretor is saved in the given
+filename. When you want to stop the output to the dribble file, type
+
+(dribble)
+
+with no filename. 
+
+The results for testing my functions with the test variables above is
+as follows, but I added blank lines to make it more readable:
+
+#<OUTPUT BUFFERED FILE-STREAM CHARACTER #P"tut-help.txt">
+[13]> test-rule1
+(BIRD ((FEATHERS Y) (LAY-EGGS Y)))
+
+[14]> (get-conditions test-rule1)
+((FEATHERS Y) (LAY-EGGS Y))
+
+[15]> (get-conclusion test-rule1)
+BIRD
+
+[16]> (condition-known '(feathers y))
+(FEATHERS Y)
+
+[17]> (condition-true '(feathers y))
+T
+
+[17]> (condition-true '(feathers n))
+NIL
+
+[21]> (triggered-rule test-rule1)
+(BIRD ((FEATHERS Y) (LAY-EGGS Y)))
+
+[22]> (get-triggered-rules *rules)
+((ZEBRA ((UNGULATE Y) (BLACK-STRIPES Y))) (BIRD ((FEATHERS Y) (LAY-EGGS Y))))
+
+[23]> *facts
+((FEATHERS Y) (LAY-EGGS Y) (FLY N) (UNGULATE Y) (BLACK-STRIPES Y))
+
+[24]> (fire-rules (get-triggered-rules *rules) *goals)
+(ZEBRA ((UNGULATE Y) (BLACK-STRIPES Y)))
+
+[25]> *facts
+((ZEBRA Y) (FEATHERS Y) (LAY-EGGS Y) (FLY N) (UNGULATE Y)(BLACK-STRIPES Y))
+
+[26]> (dribble)
+2012-03-09 08:44:51
+;; Dribble of #<IO TERMINAL-STREAM> finished on NIL.

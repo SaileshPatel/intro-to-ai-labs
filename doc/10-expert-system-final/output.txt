@@ -1,0 +1,405 @@
+THIS IS OUTPUT FROM RUNNING THE PROGRAM. AFTER LOADING IT, THE MAIN
+MENU FUNCTION CALL, RUN, WAS MADE. THEN IT FOLLOWS THE INPUT DATA AS
+SHOWN BY THE USER INTERACTION. THE FACTS ARE SET UP SO THAT THE
+BACKWARD CHAINING FAILS FOR TRYING TO PROVE THE ANIMAL IS A ZEBRA,
+THEN THE FORWARD CHAINING TAKES PLACE. IF THE HOOFS FACT IS ADDED, AS
+SHOWN, THEN FORWARD CHAINING WORKS. IF YOU THEN RELOAD THE WHOLE
+SYSTEM AND ADD HOOFS TO THE ORIGINAL FACTS, YOU CAN SEE HOW BACKWARD
+CHAINING WORKS WHEN IT CAN PROVE THE RULE. 
+
+YOU DON'T HAVE TO RELOAD EVERYTHING: YOU COULD JUST CHANGE THE FACTS
+USING SETF. IF YOU LEAVE THE FACTS AS THEY ARE AFTER FORWARD CHAINING,
+IT DOESN'T NEED ANY CHAINING SO IS NOT VERY INTERESTING.
+
+;; Dribble of #<IO TERMINAL-STREAM> started on 2014-04-08 11:37:25.
+#<OUTPUT BUFFERED FILE-STREAM CHARACTER #P"lab-final-test.txt">
+[9]> (run)
+
+What is the name of your animal you want identified?
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebo
+
+The name you have entered is ZEBO. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+We know the following facts about ZEBO: ((GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+What animal do you think ZEBO is? It must be one of the following:
+(CHEETAH TIGER GIRAFFE ZEBRA OSTRICH PENGUIN ALBATROSS)
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebra
+
+The name you have entered is ZEBRA. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+I can't prove the animal is a UNGULATE using the rule
+(UNGULATE ((MAMMAL Y) (CHEW-CUD Y)))
+because it does not have CHEW-CUD with truth status of Y.
+
+
+I can't prove the animal is a UNGULATE using the rule
+(UNGULATE ((MAMMAL Y) (HOOFS Y)))
+because it does not have HOOFS with truth status of Y.
+
+
+I can't prove the animal is a ZEBRA using the rule
+(ZEBRA ((UNGULATE Y) (BLACK-STRIPES Y)))
+because it does not have UNGULATE with truth status of Y.
+
+
+Sorry, we are not able to find out what ZEBO is for the reasons stated above.
+
+I will try to identify your animal using forward reasoning
+
+        FORWARD CHAINING
+        ----------------
+
+The current facts before applying forward reasoning are: 
+((GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+------- STILL PROVING A LITTLE TRICKY THIS ONE -------
+
+We are not able to identify the animal with the current *facts.
+You will need to provide us with some additional information.
+
+The current known facts are: ((MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+Now enter a new fact.
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+chew-cud
+
+The name you have entered is CHEW-CUD. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+Is CHEW-CUD known to be present or absent?
+Type `y' followed by <RETURN> for YES (known to be present) or 'n' and <RETURN> for NO (known to be absent).
+y
+
+ -------------- GOT IT! ----------------
+
+Your animal is a ZEBRA
+
+The new facts after forward-chaining are: 
+((ZEBRA Y) (UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+and ZEBO is a ZEBRA because it has the following conditions: (BLACK-STRIPES UNGULATE).
+NIL
+[10]> (run)
+
+What is the name of your animal you want identified?
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebo
+
+The name you have entered is ZEBO. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+We know the following facts about ZEBO: ((ZEBRA Y) (UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+What animal do you think ZEBO is? It must be one of the following:
+(CHEETAH TIGER GIRAFFE ZEBRA OSTRICH PENGUIN ALBATROSS)
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebra
+
+The name you have entered is ZEBRA. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+Got it! ZEBO is a ZEBRA.
+
+    BACKWARD CHAINING EXPLANATION
+    -----------------------------
+
+The known facts about ZEBO are ((ZEBRA Y) (UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+ZEBO is a ZEBRA because it has the following conditions
+((UNGULATE Y) (BLACK-STRIPES Y))
+
+This provides the proof for you: 
+((ZEBRA ((UNGULATE Y) (BLACK-STRIPES Y)))).
+NIL
+[11]> (setf *facts (rest *facts))
+((UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+[12]> (run)
+
+What is the name of your animal you want identified?
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebo
+
+The name you have entered is ZEBO. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+We know the following facts about ZEBO: ((UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+What animal do you think ZEBO is? It must be one of the following:
+(CHEETAH TIGER GIRAFFE ZEBRA OSTRICH PENGUIN ALBATROSS)
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebra
+
+The name you have entered is ZEBRA. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+Sorry, we are not able to find out what ZEBO is for the reasons stated above.
+
+I will try to identify your animal using forward reasoning
+
+        FORWARD CHAINING
+        ----------------
+
+The current facts before applying forward reasoning are: 
+((UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+ -------------- GOT IT! ----------------
+
+Your animal is a ZEBRA
+
+The new facts after forward-chaining are: 
+((ZEBRA Y) (UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+and ZEBO is a ZEBRA because it has the following conditions: (BLACK-STRIPES UNGULATE).
+NIL
+[13]> (dribble)
+;; Dribble of #<IO TERMINAL-STREAM> finished on 2014-04-08 11:40:06.
+;; Dribble of #<IO TERMINAL-STREAM> started on 2014-04-08 11:40:18.
+#<OUTPUT BUFFERED FILE-STREAM CHARACTER #P"lab-final-test.txt">
+[16]> (run)
+
+What is the name of your animal you want identified?
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebo
+
+The name you have entered is ZEBO. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+We know the following facts about ZEBO: ((GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+What animal do you think ZEBO is? It must be one of the following:
+(CHEETAH TIGER GIRAFFE ZEBRA OSTRICH PENGUIN ALBATROSS)
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebra
+
+The name you have entered is ZEBRA. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+*** - FIRST: T is not a list
+The following restarts are available:
+ABORT          :R1      Abort main loop
+Break 1 [17]> :q
+[18]> (dribble)
+;; Dribble of #<IO TERMINAL-STREAM> finished on 2014-04-08 11:41:28.
+;; Dribble of #<IO TERMINAL-STREAM> started on 2014-04-08 11:41:32.
+#<OUTPUT BUFFERED FILE-STREAM CHARACTER #P"lab-final-test.txt">
+[20]> (dribble)
+;; Dribble of #<IO TERMINAL-STREAM> finished on 2014-04-08 11:41:39.
+;; Dribble of #<IO TERMINAL-STREAM> started on 2014-04-08 11:41:44.
+#<OUTPUT BUFFERED FILE-STREAM CHARACTER #P"lab-final-test.txt">
+[23]> (run)
+
+What is the name of your animal you want identified?
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebo
+
+The name you have entered is ZEBO. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+We know the following facts about ZEBO: ((GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+What animal do you think ZEBO is? It must be one of the following:
+(CHEETAH TIGER GIRAFFE ZEBRA OSTRICH PENGUIN ALBATROSS)
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebra
+
+The name you have entered is ZEBRA. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+I can't prove the animal is a UNGULATE using the rule
+(UNGULATE ((MAMMAL Y) (CHEW-CUD Y)))
+because it does not have CHEW-CUD with truth status of Y.
+
+
+I can't prove the animal is a UNGULATE using the rule
+(UNGULATE ((MAMMAL Y) (HOOFS Y)))
+because it does not have HOOFS with truth status of Y.
+
+
+I can't prove the animal is a ZEBRA using the rule
+(ZEBRA ((UNGULATE Y) (BLACK-STRIPES Y)))
+because it does not have UNGULATE with truth status of Y.
+
+
+Sorry, we are not able to find out what ZEBO is for the reasons stated above.
+
+I will try to identify your animal using forward reasoning
+
+        FORWARD CHAINING
+        ----------------
+
+The current facts before applying forward reasoning are: 
+((GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+------- STILL PROVING A LITTLE TRICKY THIS ONE -------
+
+We are not able to identify the animal with the current *facts.
+You will need to provide us with some additional information.
+
+The current known facts are: ((MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+Now enter a new fact.
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+chew-cud
+
+The name you have entered is CHEW-CUD. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+Is CHEW-CUD known to be present or absent?
+Type `y' followed by <RETURN> for YES (known to be present) or 'n' and <RETURN> for NO (known to be absent).
+y
+
+ -------------- GOT IT! ----------------
+
+Your animal is a ZEBRA
+
+The new facts after forward-chaining are: 
+((ZEBRA Y) (UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+and ZEBO is a ZEBRA because it has the following conditions: (BLACK-STRIPES UNGULATE).
+NIL
+[24]> (run)
+
+What is the name of your animal you want identified?
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebo
+
+The name you have entered is ZEBO. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+We know the following facts about ZEBO: ((ZEBRA Y) (UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+What animal do you think ZEBO is? It must be one of the following:
+(CHEETAH TIGER GIRAFFE ZEBRA OSTRICH PENGUIN ALBATROSS)
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebra
+
+The name you have entered is ZEBRA. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+Got it! ZEBO is a ZEBRA.
+
+    BACKWARD CHAINING EXPLANATION
+    -----------------------------
+
+The known facts about ZEBO are ((ZEBRA Y) (UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+ZEBO is a ZEBRA because it has the following conditions
+((UNGULATE Y) (BLACK-STRIPES Y))
+
+This provides the proof for you: 
+((ZEBRA ((UNGULATE Y) (BLACK-STRIPES Y)))).
+NIL
+[25]> (setf *facts (rest *facts))
+((UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+[26]> (run)
+
+What is the name of your animal you want identified?
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebo
+
+The name you have entered is ZEBO. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+We know the following facts about ZEBO: ((UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y))
+
+What animal do you think ZEBO is? It must be one of the following:
+(CHEETAH TIGER GIRAFFE ZEBRA OSTRICH PENGUIN ALBATROSS)
+
+Enter the name followed by <RETURN>. 
+Remember that the name must be all one word or else hyphenated
+zebra
+
+The name you have entered is ZEBRA. Is it correct?
+
+Type `Y' followed by <RETURN> for YES or 'N' and <RETURN> for NO.
+y
+
+I can't prove the animal is a ZEBRA using the rule
+(ZEBRA ((UNGULATE Y) (BLACK-STRIPES Y)))
+because it does not have NIL with truth status of NIL.
+
+
+Sorry, we are not able to find out what ZEBO is for the reasons stated above.
+
+I will try to identify your animal using forward reasoning
+
+        FORWARD CHAINING
+        ----------------
+
+The current facts before applying forward reasoning are: 
+((UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+ -------------- GOT IT! ----------------
+
+Your animal is a ZEBRA
+
+The new facts after forward-chaining are: 
+((ZEBRA Y) (UNGULATE Y) (CHEW-CUD Y) (MAMMAL Y) (GIVE-MILK Y) (HAIR Y) (BLACK-STRIPES Y)).
+
+and ZEBO is a ZEBRA because it has the following conditions: (BLACK-STRIPES UNGULATE).
+NIL
+[27]> (dribble)
+;; Dribble of #<IO TERMINAL-STREAM> finished on 2014-04-08 11:46:40.
